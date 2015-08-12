@@ -1,4 +1,6 @@
 import re
+from mybook import MyBook, convert_time
+from datetime import datetime, timedelta
 
 def GrabProblemList(html_file, dump_file):
     print('Read the LeetCode problem list html file: %s' % html_file)
@@ -20,12 +22,10 @@ def GrabProblemList(html_file, dump_file):
     print('%d problems found. Result dump to %s' % (len(problems), dump_file))
 
 
-def PrepareNotes(dump_file, evernote_file):
-    fout = open(evernote_file, 'w')
+def PrepareNotes(dump_file):
     for line in open(dump_file, 'r').readlines():
         idx, url, name = line.strip().split('\t')
         title = str.format('LeetCode {0:0>3}: {1}', idx, name)
-        print(title)
         content = '<?xml version="1.0" encoding="UTF-8"?>'
         content += '<!DOCTYPE en-note SYSTEM ' \
                '"http://xml.evernote.com/pub/enml2.dtd">'
@@ -34,8 +34,7 @@ def PrepareNotes(dump_file, evernote_file):
         content += '<h2><b>Solution</b></h2>'
         content += '<ul><li></li></ul>'
         content += '</en-note>'
-        fout.write('%s\t%s\n' % (title, content))
-    fout.close()
+        yield (title, content)
 
 if __name__ == '__main__':
     html_file = r'leetcode.html'
@@ -43,5 +42,12 @@ if __name__ == '__main__':
     evernote_file = r'notes.txt'
 
     GrabProblemList(html_file, dump_file)
-    PrepareNotes(dump_file, evernote_file)
+
+    myen = MyBook()
+    dt = datetime.today()
+    created = datetime(dt.year, dt.month, dt.day)
+    for title, content in PrepareNotes(dump_file):
+        myen.create_note(title, content, created)
+        created += timedelta(seconds=1)
+
     
