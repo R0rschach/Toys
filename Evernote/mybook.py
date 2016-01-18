@@ -13,6 +13,8 @@ notebook_dct = {'!nbox': 'cd9cb2e4-452e-4900-b494-dba98dfcbc1e',
 
 def convert_time(local_dt):
     delta = (local_dt - datetime.utcfromtimestamp(0)).total_seconds()
+    # dirty hack to solve the local time to utc problem... work for pst
+    delta += + 3600*12
     return int(delta * 1000)
 
 
