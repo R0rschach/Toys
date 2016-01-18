@@ -47,9 +47,9 @@ if __name__ == '__main__':
     while dt <= end:
         print('Create Daily Journal: %s' % dt.strftime('%Y-%m-%d'))
         title, content, created = create_daily_journal(dt)
-        mybook.create_note(title, content, created=created)
+        mybook.create_note(title, content, created=created, notebook_name='Memories')
         if dt.weekday() == 6:
             print('Create Weely Summary: %s' % dt.strftime('%Y-%m-%d'))
             title, content, created = create_weekly_summary(dt + timedelta(seconds=1))
-            mybook.create_note(title, content, created=created)
+            mybook.create_note(title, content, created=created, notebook_name='Memories')
         dt += timedelta(days=1)
